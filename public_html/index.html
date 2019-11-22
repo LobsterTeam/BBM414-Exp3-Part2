@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<!--
+FIDAN SAMET 21727666
+OGUZ BAKIR 21627007
+-->
+<html>
+    <head>
+        <title>Ninja Star</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="shader.js" defer></script>
+        <script src="MV.js" defer></script>
+        <script src="initialize.js" defer></script>
+        <script src="app.js" defer></script>
+    </head>
+    <body>
+        <div>Ninja Star</div>
+        <canvas id="glCanvas" width="800" height="800"></canvas>
+    </body>
+    <div>
+        <button id="startSpin">Start Spin</button>
+        <button id="stopSpin">Stop Spin</button>
+        <input type="number" id="spinCounter" step="1" value="1" max="10" min="-10">
+    </div>
+    <div>
+        <button id="startScale">Start Scale</button>
+        <button id="stopScale">Stop Scale</button>
+    </div>
+    <div>
+        <button id="startSpiral">Start Spiral</button>
+        <button id="stopSpiral">Stop Spiral</button>
+        <input type="number" id="spiralCounter" step="1" value="0" max="10" min="-10">
+    </div>
+    
+</html>
