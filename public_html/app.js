@@ -21,9 +21,11 @@ var startScale = false;
 var scaleBig = false;
 var scale = 0.25;
 var startSpiral = false;
+var spiralPos = 0.0;
 var spiralCounter = 0;
 var numOfComponents = 2;        // x and y (2d)
 var offset = 0;
+var initialAngle = 0;
 
 function main() {
     const canvas = document.querySelector("#glCanvas");
@@ -48,16 +50,20 @@ function main() {
     const triangleShader = initShaderProgram(gl, vertexShader, triangleFragmentShader);
     const triangleBuffer = gl.createBuffer();
     gl.enableVertexAttribArray(gl.getAttribLocation(triangleShader, 'i_position'));
-    var triangleTheta = gl.getUniformLocation(triangleShader, 'u_theta');
+    var triangleTheta = gl.getUniformLocation(triangleShader, 'u_spin_theta');
     var triangleScale = gl.getUniformLocation(triangleShader, 'i_scale');
+    var triangleTranslateTheta = gl.getUniformLocation(triangleShader, 'u_translate_theta');
+    var triangleSymmetry = gl.getUniformLocation(triangleShader, 'u_symmetry');
     
     // DRAW CIRCLES OF NINJA STAR
     ninjaStarCircle();
     const circleShader = initShaderProgram(gl, vertexShader, circleFragmentShader);
     const circleBuffer = gl.createBuffer();
     gl.enableVertexAttribArray(gl.getAttribLocation(circleShader, 'i_position'));
-    var circleTheta = gl.getUniformLocation(circleShader, 'u_theta');
+    var circleTheta = gl.getUniformLocation(circleShader, 'u_spin_theta');
     var circleScale = gl.getUniformLocation(circleShader, 'i_scale');
+    var circleTranslateTheta = gl.getUniformLocation(circleShader, 'u_translate_theta');
+    var circleSymmetry = gl.getUniformLocation(circleShader, 'u_symmetry');
     
     // ROTATION ANIMATION
     function render () {
@@ -87,7 +93,20 @@ function main() {
             }
         }
         
-        if (startSpiral) {}
+        if (startSpiral) {
+            
+            if (initialAngle <= -360){
+                spiralPos = 1.0;
+            } else if (initialAngle >= 0) {
+                spiralPos = 0.0;
+            }
+            console.log(initialAngle);
+            if (spiralPos == 1.0) {
+                initialAngle += spiralCounter;
+            } else {
+                initialAngle -= spiralCounter;
+            }
+        }
     
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         
@@ -102,6 +121,8 @@ function main() {
         gl.useProgram(triangleShader);
         gl.uniform1f(triangleTheta, angles);
         gl.uniform1f(triangleScale, scale);
+        gl.uniform1f(triangleTranslateTheta, initialAngle);
+        gl.uniform1f(triangleSymmetry, spiralPos);
         
         // DRAW TRIANGLES
         gl.drawArrays(gl.TRIANGLES, offset, triangleVertexNum);
@@ -117,6 +138,8 @@ function main() {
         gl.useProgram(circleShader);
         gl.uniform1f(circleTheta, angles);
         gl.uniform1f(circleScale, scale);
+        gl.uniform1f(circleTranslateTheta, initialAngle);
+        gl.uniform1f(circleSymmetry, spiralPos);
 
         // DRAW CIRCLES
         for (var i = 0; i < 5; i++) {
@@ -124,7 +147,7 @@ function main() {
         }
         
         // animate on 2 and 3
-        if (startRotation || startScale) {
+        if (startRotation || startScale || startSpiral) {
             requestAnimationFrame(render);
         }
     }
@@ -146,7 +169,7 @@ function main() {
     };
     document.getElementById("spinCounter").onclick = function(){
         if (startRotation == true) {
-            speed = document.getElementById("spinCounter").value;
+            speed = parseInt(document.getElementById("spinCounter").value);
             console.log(speed);
         }
     };
@@ -168,19 +191,19 @@ function main() {
     document.getElementById("startSpiral").onclick = function(){
         if (startSpiral == false) {
             startSpiral = true;
-        }
-    };
-    document.getElementById("stopSpiral").onclick = function(){
-        if (startSpiral == true) {
-            startSpiral = false;
             if (!(startRotation || startScale)) { // if there is no animation going on
                 render();
             }
         }
     };
+    document.getElementById("stopSpiral").onclick = function(){
+        if (startSpiral == true) {
+            startSpiral = false;
+        }
+    };
     document.getElementById("spiralCounter").onclick = function(){
-        if (startSpiral == false) {
-            
+        if (startSpiral == true) {
+            spiralCounter = parseInt(document.getElementById("spiralCounter").value);
         }
     };
 }
