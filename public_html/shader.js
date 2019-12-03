@@ -19,7 +19,7 @@ const vertexShader = `#version 300 es
         float translateAngle = radians(u_translate_theta);
         float translateC = cos(translateAngle);
         float translateS = sin(translateAngle);
-        float comp = u_translate_theta / -900.0;
+        float comp = u_translate_theta / -1080.0;
         if (u_spin_symmetry == 1.0) {
             translateC = -1.0 * translateC;
         }

@@ -15,7 +15,6 @@ var ninjaStarData = [];
 var spinAngles = 0;
 var spinSpeed = 0;
 var startSpin = false;
-var rightSpin = false;
 var startScale = false;
 var scaleBig = false;
 var scale = 0.25;
@@ -68,11 +67,7 @@ function main() {
     function render () {
         
         if (startSpin) {
-            if (rightSpin) {
-                spinAngles += spinSpeed;
-            } else {
-                spinAngles -= spinSpeed;
-            }
+            spinAngles += spinSpeed;
         }
         
         if (startScale) {
@@ -84,9 +79,9 @@ function main() {
             }
             
             if (scaleBig) {
-                scale += 0.005;
+                scale += 0.0025;
             } else {
-                scale -= 0.005;
+                scale -= 0.0025;
             }
         }
         
