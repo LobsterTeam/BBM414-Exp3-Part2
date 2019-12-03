@@ -50,29 +50,6 @@ const triangleFragmentShader = `#version 300 es
     }
 `;
 
-const circleVertexShader = `#version 300 es
-
-    in vec2 i_position;
-
-    uniform float u_theta;
-
-    void main() {
-        float angles = radians(u_theta);
-        float s = cos(angles);
-        float c = sin(angles);
-        mat4 rz = mat4(c, s, 0.0, 0.0,
-                        -s, c, 0.0, 0.0,
-                        0.0, 0.0, 1.0, 0.0,
-                        0.0, 0.0, 0.0, 1.0);
-        mat4 scale = mat4(1.0/2.0, 0.0, 0.0, 0.0,
-                            0.0, 1.0/2.0, 0.0, 0.0,
-                            0.0, 0.0, 1.0/2.0, 0.0,
-                            0.0, 0.0, 0.0, 1.0);
-        
-        gl_Position = rz * scale * vec4(i_position, 0.0, 1.0);
-    }
-`;
-
 const circleFragmentShader = `#version 300 es
 
     precision mediump float;

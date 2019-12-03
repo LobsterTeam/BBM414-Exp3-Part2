@@ -10,7 +10,6 @@
 
 const triangleVertexNum = 12;
 const triangleFanNumber = 360;
-const gray = vec3(64 / 255.0, 64 / 255.0, 64 / 255.0);
 var ninjaStarData = [];
 var spinAngles = 0;
 var spinSpeed = 0;
@@ -67,6 +66,7 @@ function main() {
     function render () {
         
         if (startSpin) {
+            // spinning
             spinAngles += spinSpeed;
         }
         
@@ -86,7 +86,7 @@ function main() {
         }
         
         if (startSpiral) {
-            
+            // spiral rotating            
             // spiralCounter negative and spiralAngle greater than 360 then spiral positive
             // spiralCounyer negative and spiralAngle smaller than -360 then spiral positive
             if ((spiralCounter < 0 && spiralAngle >= 450) 
@@ -104,6 +104,7 @@ function main() {
             } else {
                 spiralAngle -= spiralCounter;
             }
+            console.log(spiralAngle);
         }
     
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
