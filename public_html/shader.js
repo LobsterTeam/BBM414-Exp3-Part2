@@ -10,7 +10,7 @@ const vertexShader = `#version 300 es
     uniform float u_translate_theta;
     uniform float u_scale;
     uniform float u_spin_theta;
-    uniform float u_spin_symmetry;
+    uniform float u_translation_comp;
 
     void main() {
         float spinAngles = radians(u_spin_theta);
@@ -19,14 +19,10 @@ const vertexShader = `#version 300 es
         float translateAngle = radians(u_translate_theta);
         float translateC = cos(translateAngle);
         float translateS = sin(translateAngle);
-        float comp = u_translate_theta / -1080.0;
-        if (u_spin_symmetry == 1.0) {
-            translateC = -1.0 * translateC;
-        }
         mat4 t = mat4(1.0, 0.0, 0.0, 0.0,
                         0.0, 1.0, 0.0, 0.0,
                         0.0, 0.0, 1.0, 0.0,
-                        comp * translateC, comp * translateS, 0.0, 1.0);
+                        u_translation_comp * translateC, u_translation_comp * translateS, 0.0, 1.0);
         mat4 rz = mat4(spinC, spinS, 0.0, 0.0,
                         -spinS, spinC, 0.0, 0.0,
                         0.0, 0.0, 1.0, 0.0,

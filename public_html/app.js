@@ -23,6 +23,7 @@ var spiralCounter = 0;
 var spiralAngle = 0;
 var numOfComponents = 2;        // x and y (2d)
 var offset = 0;
+var translationComp = 0.0;
 
 function main() {
     const canvas = document.querySelector("#glCanvas");
@@ -50,7 +51,7 @@ function main() {
     var triangleSpinTheta = gl.getUniformLocation(triangleShader, 'u_spin_theta');
     var triangleScale = gl.getUniformLocation(triangleShader, 'u_scale');
     var triangleTranslateTheta = gl.getUniformLocation(triangleShader, 'u_translate_theta');
-    var triangleSpinSymmetry = gl.getUniformLocation(triangleShader, 'u_spin_symmetry');
+    var triangleTranslationComp = gl.getUniformLocation(triangleShader, 'u_translation_comp');
     
     // DRAW CIRCLES OF NINJA STAR
     ninjaStarCircle();
@@ -60,7 +61,7 @@ function main() {
     var circleSpinTheta = gl.getUniformLocation(circleShader, 'u_spin_theta');
     var circleScale = gl.getUniformLocation(circleShader, 'u_scale');
     var circleTranslateTheta = gl.getUniformLocation(circleShader, 'u_translate_theta');
-    var circleSpinSymmetry = gl.getUniformLocation(circleShader, 'u_spin_symmetry');
+    var circleTranslationComp = gl.getUniformLocation(circleShader, 'u_translation_comp');
     
     // ROTATION ANIMATION
     function render () {
@@ -86,25 +87,16 @@ function main() {
         }
         
         if (startSpiral) {
-            // spiral rotating            
-            // spiralCounter negative and spiralAngle greater than 360 then spiral positive
-            // spiralCounyer negative and spiralAngle smaller than -360 then spiral positive
-            if ((spiralCounter < 0 && spiralAngle >= 450) 
-                    || (spiralCounter > 0 && spiralAngle <= -450)) {
-                spiralPos = 1.0;
-            // spiralCounter negative and spiralAngle smaller than 0 then spiral negative
-            // spiralCounter positive and spiralAngle greater than 0 then spiral negative
-            } else if ((spiralCounter < 0 && spiralAngle <= 0) 
-                    || (spiralCounter > 0 && spiralAngle >= 0)) {
-                spiralPos = 0.0;
+            // spiral rotating
+            
+            if ((spiralCounter < 0 && spiralAngle >= 450)) {
+                spiralAngle -= 900;
+            } else if ((spiralCounter > 0 && spiralAngle <= -450)) {
+                spiralAngle += 900;
             }
-                        
-            if (spiralPos == 1.0) {
-                spiralAngle += spiralCounter;
-            } else {
-                spiralAngle -= spiralCounter;
-            }
+            spiralAngle -= spiralCounter;
             console.log(spiralAngle);
+            translationComp = spiralAngle / -1080;
         }
     
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -121,7 +113,7 @@ function main() {
         gl.uniform1f(triangleSpinTheta, spinAngles);
         gl.uniform1f(triangleScale, scale);
         gl.uniform1f(triangleTranslateTheta, spiralAngle);
-        gl.uniform1f(triangleSpinSymmetry, spiralPos);
+        gl.uniform1f(triangleTranslationComp, translationComp);
         
         // DRAW TRIANGLES
         gl.drawArrays(gl.TRIANGLES, offset, triangleVertexNum);
@@ -138,7 +130,7 @@ function main() {
         gl.uniform1f(circleSpinTheta, spinAngles);
         gl.uniform1f(circleScale, scale);
         gl.uniform1f(circleTranslateTheta, spiralAngle);
-        gl.uniform1f(circleSpinSymmetry, spiralPos);
+        gl.uniform1f(circleTranslationComp, translationComp);
 
         // DRAW CIRCLES
         for (var i = 0; i < 5; i++) {
