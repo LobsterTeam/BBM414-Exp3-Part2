@@ -15,11 +15,10 @@ var spinAngles = 0;
 var spinSpeed = 0;
 var startSpin = false;
 var startScale = false;
-var scaleBig = false;
+var scaleBig = true;
 var scale = 0.25;
 var startSpiral = false;
-var spiralPos = 0.0;
-var spiralCounter = 0;
+var spiralSpeed = 0;
 var spiralAngle = 0;
 var numOfComponents = 2;        // x and y (2d)
 var offset = 0;
@@ -43,7 +42,7 @@ function main() {
     var normalize = false;
     var stride = 0;
     
-    // DRAW TRIANGLES OF NINJA STAR
+    // TRIANGLES OF NINJA STAR
     ninjaStarTriangle(); 
     const triangleShader = initShaderProgram(gl, vertexShader, triangleFragmentShader);
     const triangleBuffer = gl.createBuffer();
@@ -53,7 +52,7 @@ function main() {
     var triangleTranslateTheta = gl.getUniformLocation(triangleShader, 'u_translate_theta');
     var triangleTranslationComp = gl.getUniformLocation(triangleShader, 'u_translation_comp');
     
-    // DRAW CIRCLES OF NINJA STAR
+    // CIRCLES OF NINJA STAR
     ninjaStarCircle();
     const circleShader = initShaderProgram(gl, vertexShader, circleFragmentShader);
     const circleBuffer = gl.createBuffer();
@@ -78,7 +77,6 @@ function main() {
             } else if (scale <= 0.125) {     // 0.5 scale
                 scaleBig = true;
             }
-            
             if (scaleBig) {
                 scale += 0.0025;
             } else {
@@ -88,14 +86,13 @@ function main() {
         
         if (startSpiral) {
             // spiral rotating
-            
-            if ((spiralCounter < 0 && spiralAngle >= 450)) {
+            // check whether the first part of spiral is done or not
+            if (spiralSpeed < 0 && spiralAngle >= 450) {
                 spiralAngle -= 900;
-            } else if ((spiralCounter > 0 && spiralAngle <= -450)) {
+            } else if (spiralSpeed > 0 && spiralAngle <= -450) {
                 spiralAngle += 900;
             }
-            spiralAngle -= spiralCounter;
-            console.log(spiralAngle);
+            spiralAngle -= spiralSpeed;
             translationComp = spiralAngle / -1080;
         }
     
@@ -137,7 +134,7 @@ function main() {
             gl.drawArrays(gl.TRIANGLE_FAN, i * triangleFanNumber + i, triangleFanNumber);
         }
         
-        // animate on 2 and 3
+        // Animate if there is a spin or scale or spiral
         if (startSpin || startScale || startSpiral) {
             requestAnimationFrame(render);
         }
@@ -148,7 +145,7 @@ function main() {
     document.getElementById("startSpin").onclick = function(){
         if (startSpin == false) {
             startSpin = true;
-            spinSpeed = parseInt(document.getElementById("spinCounter").value);
+            spinSpeed = parseInt(document.getElementById("spinSpeed").value);
             if (!(startSpiral || startScale)) { // if there is no animation going on
                 render();
             }
@@ -159,15 +156,14 @@ function main() {
             startSpin = false;
         }
     };
-    document.getElementById("spinCounter").onclick = function(){
+    document.getElementById("spinSpeed").onclick = function(){
         if (startSpin == true) {
-            spinSpeed = parseInt(document.getElementById("spinCounter").value);
+            spinSpeed = parseInt(document.getElementById("spinSpeed").value);
         }
     };
     document.getElementById("startScale").onclick = function(){
         if (startScale == false) {
             startScale = true;
-            scaleBig = true;
             if (!(startSpin || startSpiral)) { // if there is no animation going on
                 render();
             }
@@ -176,13 +172,12 @@ function main() {
     document.getElementById("stopScale").onclick = function(){
         if (startScale == true) {
             startScale = false;
-            scaleBig = false;
         }
     };
     document.getElementById("startSpiral").onclick = function(){
         if (startSpiral == false) {
             startSpiral = true;
-            spiralCounter = parseInt(document.getElementById("spiralCounter").value);
+            spiralSpeed = parseInt(document.getElementById("spiralSpeed").value);
             if (!(startSpin || startScale)) { // if there is no animation going on
                 render();
             }
@@ -193,9 +188,9 @@ function main() {
             startSpiral = false;
         }
     };
-    document.getElementById("spiralCounter").onclick = function(){
+    document.getElementById("spiralSpeed").onclick = function(){
         if (startSpiral == true) {
-            spiralCounter = parseInt(document.getElementById("spiralCounter").value);
+            spiralSpeed = parseInt(document.getElementById("spiralSpeed").value);
         }
     };
 }
