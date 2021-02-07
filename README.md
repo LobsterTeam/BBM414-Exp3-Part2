@@ -1,3 +1,3 @@
-### Ninja Star with Spiral Motion
+### Spiraling Ninja Star
 
-Play it: [https://lobsterteam.github.io/BBM414-Exp3-Part2/public_html/](https://lobsterteam.github.io/BBM414-Exp3-Part2/public_html/)
+Play it: [https://lobsterteam.github.io/spiraling-ninja-star/public_html/](https://lobsterteam.github.io/spiraling-ninja-star/public_html/)
